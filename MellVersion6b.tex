@@ -1,0 +1,678 @@
+\input{../Ambel}
+
+\title{Moduli stack of elliptic curves}
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Introduction}
+This note does not contain original work by the authors. Its origin is the attempt to understand some details of the construction of the moduli stack of elliptic curves. As the details on several points seem to be hard to find in the literature (but are surely well-known to the experts), we thought it would be good to write them down before we forget them again ourselves. In particular, we tried to be very careful about noetherianity assumptions, as often used in e.g. cohomology and base change statements. The main sources for our note are \cite{KatzMazur}, \cite{DeligneRapoport}, \cite{OlssonStacks} and \cite{VistoliDescent}. 
+
+We do not aim at making self-contained notes, which would be a far more extensive task. Thus, whenever we need a statement e.g. in algebraic geometry which is well-documented, we tend to just cite it (although we are not completely consistent on this). 
+
+This note will probably contain errors at every level. Notifications about such as well as more general feedback are welcome. 
+
+\section{Elliptic curves}
+Before actually discussing the moduli stack of elliptic curves, we want to recall and collect properties of elliptic curves which we will need in the further treatment. 
+\begin{Definition}[\cite{Hartshorne}, Chapter IV]
+ A \textbf{curve} over an algebraically closed field $k$ is an integral regular scheme of dimension $1$, proper over $k$. The \textbf{genus} of a curve $X$ over $k$ is defined to be $\dim_k H^1(X, \OO_X)$. A curve $E$ of genus $1$ together with a chosen distinguished $k$-valued point $P\in E$ is called \textbf{elliptic}. 
+\end{Definition}
+
+Note that this implies in particular that the morphism $X\to \Spec(k)$ is smooth (cf. e.g. \cite{Hartshorne}, Example 10.0.2). 
+
+We will need a variant of fpqc descent for elliptic curves over algebraically closed fields, which we discuss in the next lemma. 
+
+\begin{Lemma}\label{DescentAlgClosedField}
+Let $L$ be an algebraically closed field and $k\subseteq L$ an algebraically closed field. Moreover, let the square
+\[
+ \xymatrix{
+    E'\ar[r]^-{p}\ar[d]_{g} &  \Spec(L)\ar[d]^{f}\\
+  E\ar[r]_-{q}& \Spec(k) 
+ }
+\] 
+be cartesian. Then $E'$ is a curve of genus $g$ over $L$ if and only if $E$ is a curve of genus $g$ over $k$. 
+
+In particular, $(E',P')$ is an elliptic curve over $L$ if and only if $(E,P)$ is an elliptic curve over $k$ for any choice of $L$- or $k$-valued point, respectively. 
+\end{Lemma}
+
+\begin{pf}
+ Note that $f$ is an faithfully flat and quasi-compact morphism, thus $p$ is proper or smooth if and only if $q$ is proper or smooth, respectively, as shown in \cite{EGAIV}, Proposition 2.7.1, and Corollaire 17.7.3. 
+By \cite[Tag 038H]{stacks-project}, $E$ being irreducible is equivalent to $E'$ being irreducible. Thus, by Example III.10.0.3 of \cite{Hartshorne}, both $E$ and $E'$ are regular integral schemes if one of them is, and by \cite{Hartshorne}, Proposition III.10.1, both of dimension $1$ if one of them is. 
+
+Last we consider their genera. Using that by \cite[Tag 02KH]{stacks-project}, we have 
+\[
+ H^1(E, \OO_{E})\otimes_k L\cong H^1(E',\OO_{E'}),
+\]
+so the genera of $E$ and $E'$ coincide; thus the claim.
+\end{pf}
+
+
+
+\begin{Definition}[cf.\ e.g.\ \cite{OlssonStacks}]
+An \textbf{elliptic curve} over an arbitrary scheme $S$ is a smooth proper morphism $p\colon E\to S$ together with a chosen section $e\colon S\to E$ so that the pullback of $(E,e)$ to any geometric fiber is an elliptic curve.
+\end{Definition}
+%discuss this and other definitions!!!!
+
+The following easy (and well-known) observation will be helpful.
+
+\begin{Lemma}\label{SectionImmersion}
+ Let $p\colon C\to S$ be a separated morphism of schemes with a right inverse $e\colon S\to C$. Then $e$ is a closed immersion.
+\end{Lemma}
+
+\begin{pf}
+ Indeed, by \cite[Tag 01W6]{stacks-project}, since $p$ is separated and $p\circ e=\id_S$ is proper, we may conclude that $e$ is proper. Since $e$ has a left inverse, it is a monomorphism of schemes. Thus, by \cite{EGAIV}, Corollaire 18.12.6, it is a closed immersion. 
+\end{pf}
+
+Observe that \Cref{SectionImmersion} applies immediately to elliptic curves. 
+Note that \Cref{SectionImmersion} implies for an elliptic curve $E$ over an algebraically closed field $k$ that specifying a $k$-valued point is the same as specifying a closed point in $E$ (since $E$ is of finite type over $\Spec(k)$). 
+
+Our goal will be to prove a descent property for elliptic curves with respect to fpqc morphisms. We will reduce it to a descent property of polarized schemes, which are roughly speaking schemes with certain additional line bundles which enable the ``gluing''. 
+
+In our case, we will use as suggested in \cite{OlssonStacks}, Section 13.1.4, the line bundle which deserves the name $\OO_E(-e)$ on $E$ for $(E,p,e)$ elliptic curve over $S$. This line bundle will be the inverse of the ideal sheaf of $e$. We will recall these notions and study the properties of such sheaves in the next lemmas.
+
+
+Before actually doing so, we will show that every elliptic curve is Zariski locally pulled back from an elliptic curve over a noetherian scheme. This is well-known and is an important tool for reducing problems about elliptic curves over arbitrary basis to elliptic curves over noetherian schemes. %We will use the following easy lemma.
+% \begin{Lemma}
+%  Let $f\colon X\to Y$ be a finite \'{e}tale morphism of noetherian schemes, and assume $Y$ to be connected. Then $f_*\OO_X$ is a vector bundle. Moreover, all geometric fibers of $f$ have the same finite number of points (in the underlying topological space).
+% \end{Lemma}
+% 
+% \begin{proof}
+%  
+% \end{proof}
+
+
+
+\begin{Lemma}\label{ReductionNoetherian}
+\leavevmode
+ \begin{enumerate}
+  \item  Let $p\colon E\to \Spec(R)$ be quasi-compact, separated smooth morphism of relative dimension $1$. Then it is pulled back from such a morphism over noetherian affine scheme $p_0\colon X_0\to \Spec(R_0)$.  
+  \item If $p$ in addition has a section $e\colon \Spec(R)\to E$, it can be arranged to be pulled back from a section $\Spec(R_0)\to X_0$.
+  \item  Let $(E, p\colon E\to \Spec(R), e)$ be an elliptic curve over an affine scheme. Then it is pulled back from an elliptic curve over noetherian affine scheme. 
+ \end{enumerate}
+
+
+\end{Lemma}
+
+\begin{pf} 
+\begin{enumerate}
+ \item We can write the ring $R$ as a filtered colimit over a poset $I$ of subrings $R_i$ which are finite type over $\Z$, so in particular noetherian, and thus $\Spec(R)\cong \varprojlim \Spec(R_i)$ \cite[Proposition 10.53]{GoertzWedhorn}. 
+
+So we are in the situation of \cite[Tag 01ZM]{stacks-project}. By possibly restricting to a cofinal subset of $I$, we may assume $I$ to have an initial object $0\in I$ and we might assume to have a morphism $p_0\colon X_0\to \Spec(R_0)$ of finite presentation such that $p$ is the pullback of $p_0$ along the projection $\Spec(R)\to \Spec(R_0)$, which can in addition be assumed to be of finite presentation. Now we are in the situation of \cite[Tag 0C0C]{stacks-project}, so by possibly restricting to a cofinal subset of $I$ again, we may assume that $p_0$ is smooth. Next, we use \cite[Th\'{e}or\`{e}me 8.10.5]{EGAIV}, so by possibly restricting to a cofinal subset of $I$ again, we may assume that $p_0$ is separated.
+
+\item Using \cite[Tag 01ZM]{stacks-project} for morphisms, we obtain also a map $e_0\colon \Spec(R_0)\to X_0$ of schemes over $\Spec(R_0)$, so a section of $p_0$, whose pullback to $\Spec(R)$ is precisely $e$. 
+
+\item Now we can apply \cite[Tag 0204]{stacks-project} to conclude that we also may assume $p_0$ to be proper. Since its pullback $p$ is of relative dimension $1$, so is $p_0$.
+
+Our next goal is to show that the geometric fibers of $p_0$ are connected. We can use \cite[Tag 0CC1]{stacks-project} to conclude that the image of $\Spec(R)$ is dense in $\Spec(R_0)$ since $R_0$ is a subring of $R$. Consider now any geometric point $\Spec(k) \to \Spec(R_0)$. Since $R_0$ is a noetherian ring, this implies by \cite[Tag 01OZ]{stacks-project} and \cite[Tag 04MF]{stacks-project} that there is a connected open $U$ containing the image of $\Spec(k)$. Since it is open, the image of some point (and thus also of a geometric point) coming from $R$, so we have a commutative diagram
+\[
+ \begin{tikzcd}
+  \Spec(k)\arrow[r] & U \arrow[r, "\subseteq"] &\Spec(R_0)\\
+  & \Spec(L)\arrow[u]\arrow[r] &\Spec(R),\arrow[u]
+ \end{tikzcd}
+\]
+where $L$ is some algebraically closed field. The pullback $p_Y\colon Y:=X_0\times_{\Spec(R_0)} U \to U$ of $p_0$ is now again a proper morphism with a section, smooth of relative dimension $1$ over a noetherian connected scheme. Over the geometric point $\Spec(L)\to U$,  it is connected since by assumption $(X_0\times_{\Spec(R_0)} U)\times_U \Spec(L)\cong E\times_{\Spec(R)} \Spec(L)$ is an elliptic curve over $L$. 
+
+Now consider the Stein factorization $Y\to Y'\xrightarrow{g} U$ of the proper morphism of noetherian schemes $p_Y\colon Y\to U$ (cf. \cite{FGAexplained}, Theorem 8.2.12). By \cite[Tag 034E]{stacks-project}, the fibers of the smooth map $p_Y$ are geometrically reduced, so we can apply Proposition 8.5.16 of \cite{FGAexplained} to conclude that $Y'\to U$ is \'{e}tale. Thus also $Y'\times_{U} \Spec L\to \Spec L$ is \'{e}tale, and so $Y'\times_{U} \Spec(L)$ is a finite disjoint union of copies of $\Spec(L)$ (cf. \cite[Tag 02GL]{stacks-project}). Next, we know by Zariski's connectedness theorem (\cite{FGAexplained}, Theorem 8.2.12) that the fibers of $Y \to Y'$ are non-empty and connected. Since being non-empty is compatible with faithfully flat base change, we conclude that also the fibers of $Y\times_U \Spec(L) \to Y' \times_U \Spec(L)$ are non-empty. Since $Y\times_U\Spec(L)$ is connected, we conclude $Y' \times_U \Spec L \cong \Spec L$. Moreover, by definition of Stein factorization, the map $g\colon Y' \to U$ 
+is finite, thus we can apply \cite[Tag 02KB]{stacks-project} to conclude that $g_*\OO_{Y'}$ is a vector bundle on $U$. Employing cohomology and base change \cite[Tag 02KG]{stacks-project} and the fact that the pullback of $g$ to $\Spec(L)$ is an isomorphism, we conclude that $g_*\OO_{Y'}$ is a vector bundle of rank $1$ on the connected scheme $U$. Thus, also the pullback of $g$ to $\Spec(k)$ is an isomorphism, and using Zariski's connectedness theorem once again implies that the fibers of $Y\to U$ are geometrically connected.  
+
+So we now that the geometric fibers of $p_Y$ are geometrically connected. Again by \cite{Hartshorne}, Example III.10.0.3, the geometric fibers are regular of dimension $1$. Thus they are in particular normal \cite[Tag 0569]{stacks-project}, and thus \cite[Tag 033M]{stacks-project} integral since we have already shown that they are connected. 
+
+This implies that the geometric fibers of $p_Y$ (and thus also of $p_0$) are curves. We still need to determine the genus of these curves. With the notation above, we know that the curve $Y\times_U \Spec L\to \Spec L$ has genus $1$. As explained in \cite{Osserman}, Theorem 1.3, one can deduce from \cite[Th\'{e}or\`{e}me 7.9.4]{EGAIII.2} that the Euler characteristic of the geometric fibers is constant on the connected scheme $U$ (we also use compatility of cohomology with faithfully flat base change \cite[Tag 02KH]{stacks-project}). By \cite{QingLiu}, Corollary 3.3.21, we know that $H^0(Y \times_U \Spec k, \OO_{Y\times_U \Spec k})$ is $1$-dimensional, and by Grothendieck's vanishing theorem \cite[Tag 02UZ]{stacks-project}, cohomology groups in dimensions $\geq 2$ vanish, so we conclude that all geometric fibers of $p_Y$ and thus of $p_0$ are indeed elliptic curves. This completes the proof of the lemma.
+\end{enumerate}
+\end{pf}
+
+
+Recall (e.g.\ from \cite{Hartshorne}, Section II.5) that if $i\colon Z\to X$ is a closed immersion, we define the corresponding \textbf{ideal sheaf} of $Z$ on $X$ as the kernel of the surjective morphism $i^{\#}\colon \OO_X\to i_*\OO_Z$. %Recall also that closed subschemes and quasi-coherent ideal sheaves are in 1-1 correspondence (\cite{Hartshorne}, Proposition II.5.9). \todo{remark on closed subschemes vs closed immersions?}
+
+We will be considering the ideal sheaf of the section of an elliptic curve, which makes sense due to \Cref{SectionImmersion}. 
+Now we have equipped each elliptic curve $(E,p,e)$ over any scheme $S$ with a particular quasi-coherent sheaf, namely with the ideal sheaf of its section $e\colon S\to E$. To obtain a polarized scheme, we need to show that this sheaf is a line bundle and that its inverse is ample. Moreover, we will need this construction to be functorial in the sense made more precise below. Before actually dealing with elliptic curves, we will show some more general statements about ideal sheaves. 
+
+We have already seen that the section of an elliptic curve $(E, p\colon E\to S, e)$ exhibits the image of $S$ as a closed subscheme of $E$. Our next goal is to show (as stated in \cite{OlssonStacks}, Section 13.1.4) that this subscheme is indeed an effective Cartier divisor, i.e., that its ideal sheaf is an invertible $\OO_E$-module. The proof follows \cite{KatzMazur}, Sections 1.1 and 1.2. 
+
+\begin{Prop}[\cite{KatzMazur}, Section 1.2]\label{IdealCartier}
+ Let $p\colon C\to S$ be a smooth morphism of relative dimension $1$ which is separated and quasi-compact. Let $e\colon S\to C$ be a section of $p$. Then it defines an effective Cartier divisor in $C$. %\todo{brauchen wir das relative Statement? zumindest als zwischenschritt?}
+\end{Prop}
+
+\begin{pf}
+We can apply \Cref{SectionImmersion} to $e$ to see that it is a closed immersion. We still need to show that the corresponding ideal sheaf on $C$ is a locally free $\OO_C$-module.
+
+ First, the ideal sheaf of $e$ being a locally free $\OO_C$-module of rank $1$ is a Zariski-local statement, so we can assume $S$ to be an affine scheme, say, $\Spec(R)$. Furthermore, we apply \Cref{ReductionNoetherian} to see that $C\to \Spec(R)$ is a pullback of an elliptic curve $(E_0, p_0, e_0)$ over a noetherian affine scheme.
+%  Next, we want to reduce to the case that $S$ is noetherian, similarly to \cite[Section 8.10]{EGAIV}. We will use \cite[Th\'{e}or\`{e}me 8.10.5]{EGAIV}, \cite[Tag 0C0C]{stacks-project}, \cite[Tag 01ZA]{stacks-project} and \cite[Tag 01ZM]{stacks-project}. By  \cite[Tag 01ZA]{stacks-project}, there is a directed set $I$ and an inverse system of schemes and affine maps $(S_i, \varphi)_I$ such that $S\cong \lim_I S_i$ and each $S_i$ is of finite type over $\mathbb{Z}$, so in particular noetherian, thus also quasi-compact and quasi-separated. %last one: \cite[Tag 01T7]{stacks-project}
+% 
+% So we are in the situation of \cite[Tag 01ZM]{stacks-project}. By possibly restricting to a cofinal subset of $I$, we may assume $I$ to have an initial object $0\in I$ and we might assume to have a morphism $p_0\colon X_0\to S_0$ of finite presentation such that $p$ is the pullback of $p_0$ along the projection $S\to S_0$. Moreover, using \cite[Tag 01ZM]{stacks-project} for morphisms, we obtain also a map $e_0\colon S_0\to X_0$ of schemes over $S_0$, so a section of $p_0$, whose pullback to $S$ is precisely $e$. Now we are in the situation of \cite[Tag 0C0C]{stacks-project} and of \cite[Th\'{e}or\`{e}me 8.10.5]{EGAIV}, so by possibly restricting to a cofinal subset of $I$ again, we may assume that $p_0$ is smooth and separated. Since its pullback $p$ is of relative dimension $1$, so is $p_0$.
+
+It is enough to prove the lemma over noetherian schemes (using the pullback property \cite[Section 1.1.4]{KatzMazur} of effective Cartier divisors; note that the flatness assumption in the relative setting is satisfied since $p_0\circ e_0=\id_{S_0}$). This is precisely done in \cite[Corollary 1.1.5.2]{KatzMazur}. 
+\end{pf}
+% 
+% 
+% \begin{Lemma} \label{IdealSummand}
+%  Let $i\colon Z \to X$ be a closed immersion with a left inverse $q\colon X\to Z$. Let $\mathcal{J}$ be the ideal sheaf corresponding to $Z$.
+% 
+% Then the short exact sequence
+% \[
+%  0 \to \mathcal{J} \to \OO_X \xrightarrow{i^{\#}} i_*\OO_Z \to 0
+% \]
+% is split in each stalk. \todo{as what??}
+% \end{Lemma}
+% 
+% \begin{pf}
+% Let $x$ be a point of $X$. Assume first that $x$ is not in the image of $i$. Then $(i_*\OO_Z)_x=0$; thus the claim. 
+% 
+% So we can assume $x$ to be in the image of $i$, and call its preimage $z\in Z$. As always, we have a map $(i_*\OO_Z)_{i(z)}\to\OO_{Z, z}$ which is an isomorphism in this case since $i$ is a closed immersion (and thus any open subset $U\subset Z$ is of the form $i^{-1}V=V\cap Z$ for some open $V\subset X$). So the map $i^{\#}_{i(z)} \colon \OO_{X,i(z)} \to (i_*\OO_Z)_{i(z)}$ has a splitting if and only if its composition with the map above does. 
+% 
+% Now since $q_*(i^{\#})\circ q^{\#}=\id_{\OO_Z}$ by assumption, precomposing the map $\OO_{X,i(z)}\to \OO_{Z,z}$ just obtained with the analogous map 
+% \[
+%  \OO_{Z,z}\xrightarrow{q^{\#}} (q_*\OO_X)_{q(x)}\to \OO_{X,x}
+% \]
+% gives the identity (we  are using $q(x)=z$), thus we obtain the desired splitting.
+% \end{pf}
+% 
+% \begin{Lemma} \label{IdealPullback}
+% Let $i\colon Z \to X$ be a closed immersion which has a left inverse $q\colon X\to Z$. Let $\mathcal{J}$ be the ideal sheaf corresponding to $Z$. 
+% Moreover, let 
+% \[
+%      \xymatrix{
+%  Z' \ar[d]^{i'} \ar[r]^{\psi} & Z \ar[d]^{i}\\
+%   X' \ar[r]^{\varphi} & X
+%   }
+% \]
+% be a cartesian diagram. 
+% 
+% Then $\varphi^*\J\to \varphi^*\OO_{X}\cong\OO_{X'}$ is an injection, and this map induces an isomorphism from $\varphi^*\J$ to the ideal sheaf corresponding to the closed immersion $i'$. 
+% \end{Lemma}
+% 
+% \begin{pf}
+% Since $\varphi^*$ is right exact, we have an exact sequence
+% \[
+%  \varphi^*\mathcal{J}\to \varphi^*\OO_X \xrightarrow{\varphi^*(i^{\#})} \varphi^*i_*\OO_Z \to 0.
+% \]
+% We want to check that the first map is injective. It is enough to do so stalkwise. Since by \Cref{IdealSummand}, the stalkwise sequence before pulling back is split exact and since we obtain the stalks of the pulled back sequence via tensor product, we conclude that the first map is indeed injective.
+% 
+% Next, we recall that the base change of a closed immersion is always a closed immersion (cf. e.g. \cite[Tag 01QN]{stacks-project}). To prove that the image of $\varphi^*\mathcal{J}$ is indeed the ideal sheaf of $i'$, we need to identify the other terms of the short exact sequence. Recall that we have a canonical isomorphism $\varphi^*\OO_X\cong \OO_{X'}$. 
+% Moreover, we have a map $\varphi^*i_*\OO_Z\to i'_*\OO_{Z'}$ which is adjoint to $i_*(\psi^{\#})$. By \cite[Tag 02KG]{stacks-project}, since $i$ is affine by \cite[Tag 01SE]{stacks-project}, this map is an isomorphism (we are using $\psi^*\OO_Z\cong \OO_{Z'}$). It is formal to check that via these isomorphisms, $\varphi^*(i^{\#})$ is identified with $(i')^{\#}$. This completes the proof. 
+% \end{pf}
+
+Next, to formalize functoriality properties for the ideal sheaf of the section $e\colon S\to E$ of an elliptic curve $(E,p,e)$ over $S$, we need to introduce a notion of morphism for elliptic curves. 
+
+ \begin{Definition}
+ Let $(E,p,e)$ be an elliptic curve over $S$ and $(E',p',e')$ an elliptic curve over $S'$. A \textbf{morphism} of elliptic curves 
+\[
+ (f,g)\colon (E,p,e)\to (E',p',e')
+\]
+ consists of morphisms of schemes $f\colon S\to S'$ and $g\colon E\to E'$ which satisfy $g\circ e=e'\circ f$ and make the diagram
+\[
+     \xymatrix{
+ E \ar[d]^{p} \ar[r]^{g} & E' \ar[d]^{p'}\\
+  S \ar[r]^{f} & S',
+  }
+\]
+cartesian. 
+ \end{Definition}
+We define composition and identity morphisms for elliptic curves componentwise. 
+
+
+
+
+\begin{Prop}[\cite{OlssonStacks}, Section 13.1.4]\label{LemO3E}
+ Let $(E,p,e)$ be an elliptic curve over $S$ and $(E',p',e')$ an elliptic curve over $S'$. Let $\mathcal{J}\subset \OO_E$ and $\mathcal{J}'\subset \OO_{E'}$ be the ideal sheaves of $e$ and $e'$, respectively. Moreover, let 
+$(f,g)\colon (E,p,e)\to (E',p',e')$ be a morphism of elliptic curves as above. Then:
+\begin{enumerate}
+\item $g^*\mathcal{J'}^{\otimes r}\cong \mathcal{J}^{\otimes r}$ for any $r\in\Z$, and these isomorphisms are compatible with composition of morphisms. 
+\item $\mathcal{J}^{-1}$ is an ample line bundle over $S$.
+\end{enumerate}
+\end{Prop}
+
+\begin{pf}
+First, we observe that $e$ and $e'$ are actually closed immersions by \Cref{SectionImmersion} so that it makes sense to talk about corresponding ideal sheaf. 
+ \begin{enumerate} 
+\item This follows from \Cref{IdealCartier} together with the fact \cite[Section 1.1.2]{KatzMazur} that relative effective Cartier divisors behave well under pullbacks and finally the observation
+%  \item It is enough to show the statement for $r=1$. 
+that in the commutative diagram
+\begin{equation}\label{SectionPullback}
+ \xymatrix{
+  S \ar[r]^{f} \ar[d]^{e} & S'\ar[d]^{e'}\\
+ E \ar[d]^{p} \ar[r]^{g} & E' \ar[d]^{p'}\\
+  S \ar[r]^{f} & S'
+}
+\end{equation}
+the outer and the lower square are cartesian, thus so is the upper square.
+%  The conditions of \Cref{IdealPullback} are satisfied, and this implies the claim. Moreover, note that the isomorphism is coming from the identification $g^*\OO_{E'}\cong \OO_E$ which is compatible with composition, thus so is our isomorphism.
+
+  \item By \Cref{IdealCartier}, $\J$ is an invertible line bundle. 
+%%make all of this argument more precise, including Weil vs. Cartier!!!
+
+To check that $\J^{-1}$ is ample, we use the criterion of Corollaire 9.6.5 from \cite{EGAIV}, saying that it is enough to check that $\J^{-1}$ is ample in every fiber. Moreover, by \cite[Tag 0D2P]{stacks-project}, it is enough to consider the geometric points. By the first part, we can identify $\J^{-1}_{\Spec(k)}$ with $\OO_{E_{\Spec(k)}}(e_{\Spec(k)})$. Thus, we can use Example IV.3.3.3 of \cite{Hartshorne} to see that $\J_{\Spec(k)}^{-3}\cong \OO_{E_{\Spec(k)}}(3e_{\Spec(k)})$ is very ample. 
+ \end{enumerate}
+\end{pf}
+
+\section{Moduli stack of elliptic curves}
+The aim of this section is to define the moduli stack of elliptic curves and to prove that it is actually a stack in the fpqc topology on $\Sch/\Spec\Z$. The material of this section is well-known to the experts. We would like to provide some details for the convenience of the reader. Large part of the following are taken from \cite{OlssonStacks}, Chapter 13. More background on fpqc topology and stacks can be found in \cite{VistoliDescent}. 
+\begin{Definition}[\cite{OlssonStacks}, Chapter 13]
+ The \emph{moduli stack of elliptic curves} $\MM_{ell}$ over $\Spec\Z$ is the category over $\Sch/\Spec\Z$ with:
+\begin{itemize}
+ \item objects $(S,(E,p,e))$, where $S$ is a scheme and $(E,p,e)$ is an elliptic curve over $S$,
+ \item morphisms are morphisms of elliptic curves.
+\end{itemize}
+The functor $\MM_{ell}\to \Sch/\Spec\Z$ is given by $(S,(E,p,e))\mapsto S$ on objects and $(f,g)\mapsto f$ on morphisms.
+\end{Definition}
+
+It is easy to see that $\MM_{ell}$ is a category fibered in groupoids over $\Sch/\Spec\Z$. Our goal is now to prove that $\M_{ell}$ is a stack in the fpqc (and thus in particular in the \'{e}tale) topology on $\Sch/\Spec\Z$.
+\begin{Theorem}[\cite{OlssonStacks}, Chapter 13]\label{Mellfpqcstack}
+ $\M_{ell}$ is a stack in the fpqc topology on $\Sch/\Spec\Z$.
+\end{Theorem}
+We will imitate the proof of Theorem 4.38 in \cite{VistoliDescent}. 
+
+Thus, we will show first that $\M_{ell}$ is an fpqc prestack. Recall that $\MM_{ell}(U)$ for a scheme $U$ denotes the fiber of $\MM_{ell}\to \Sch/\Spec\Z$ over $U$ (and identity of $U$). Recall moreover that given an fpqc covering $\{U_i\xrightarrow{\sigma_i} U\}_{\{i\in I\}}$, the category of descent data (cf.\ \cite{VistoliDescent}, Definition 4.2) $\M_{ell}(\{U_i\xrightarrow{\sigma_i} U\})$ is defined as follows:
+\begin{itemize}
+ \item An object of $\M_{ell}(\{U_i\xrightarrow{\sigma_i} U\})$ consists of an elliptic curve $(U_i, (E_i,p_i,e_i))$ for every $i \in I$, together with isomorphisms of elliptic curves 
+\[
+ \varphi_{ij}\colon (U_i\times_U U_j, (\pr_2^*E_j, \pr_2^*(p_j), \pr_2^*(e_j)))\to (U_i\times_U U_j, (\pr_1^*E_i, \pr_1^*(p_i), \pr_1^*(e_i)))
+\]
+for all $i,j\in I$, and these isomorphisms are required to satisfy a cocycle condition. 
+%%make cocycle condition precise some day...
+\item A morphism 
+\[
+ (U_i, (E_i,p_i,e_i), \varphi_{ij})\to (U_i, (E_i', p_i', e_i'), \varphi'_{ij})
+\]
+consists of a morphism of elliptic curves $(\id, g_i)\colon (E_i,p_i,e_i)\to (E_i', p_i', e_i')$ for each $i\in I$ such that $\varphi'_{ij}\circ \pr_2^*(\id,g_j)=\pr_1^*(\id, g_i)\circ \varphi_{ij}$. 
+\end{itemize}
+Composition and identities are defined again componentwise. 
+
+\begin{Lemma}\label{Mellfpqcprestack}
+ $\M_{ell}$ is a prestack in the fpqc topology on $\Sch/\Spec\Z$, i.e., the functor
+\[
+ \M_{ell}(S) \xrightarrow{(\sigma_i^*)} \M_{ell}(\{U_i\xrightarrow{\sigma_i} S\})
+\]
+induced by pullbacks is fully faithful for any fpqc covering $\{U_i\xrightarrow{\sigma_i} S\}_{\{i\in I\}}$.
+\end{Lemma}
+
+\begin{pf}
+We will check faithfulness first. Let $(E,p,e)$ and $(E', p', e')$ be two elliptic curves over $S$ and let $(\id, f), (\id,g)\colon (S,(E,p,e))\to (S,(E',p',e'))$ be two morphisms in $\MM_{ell}$ which agree on the covering $\{U_i\to S\}$. More precisely, we recall that we have chosen pullbacks to define functors $\sigma_i^*\colon \MM_{ell}(S)\to \MM_{ell}(U_i)$ and require $\sigma_i^*(f)=\sigma_i^*(g)$ for all $i\in I$. Note that $\{\sigma_i^*E \xrightarrow{\tau_i} E\}$ is an fpqc covering again. Thus, the two maps $f,g\colon E\to E'$ are equal since they are equal composed with $\sigma_i^*E\xrightarrow{\tau_i} E$ (here, we are using that the fpqc site is subcanonical, as shown e.g. in \cite{VistoliDescent}, Theorem 2.55). 
+
+Next, we want to show that our functor is full. Let $(E,p,e)$ and $(E', p', e')$ be two elliptic curves over $S$ again, and assume that with the same choice of $\sigma_i^*$, we are given morphisms 
+\begin{align*}
+ \beta_i\colon ((\sigma_i^*E, \sigma_i^*p, (\id, e\circ \sigma_i)), \alpha_{\pr_1,\sigma_i}^{-1}(E) \circ\alpha_{\pr_2,\sigma_j}(E)) \to \\
+((\sigma_i^*E', \sigma_i^*p', (\id, e'\circ \sigma_i)), \alpha_{\pr_1,\sigma_i}^{-1}(E') \circ\alpha_{\pr_2,\sigma_j}(E')),
+\end{align*}
+compatible with the transition maps, where $\alpha_{f,g}(X)\colon f^*g^*X\to (gf)^*X$ is the canonical isomorphism. It is easy to check that the pullback $\pr_1^*\sigma_i^*E$ is canonically isomorphic to $\sigma_i^*E\times_E \sigma_j^*E$, and thus also that $\beta_i$ and $\beta_j$ coincide when pulled back to this fiber product and composed with the corresponding $\alpha_{?,?}$'s. This implies that (using again that $\{\sigma_i^*E \xrightarrow{\tau_i} E\}$ is an fpqc covering and that $E'$ is a sheaf on the fpqc site) there is a unique map $\beta\colon E\to E'$ so that $\beta\circ \tau_i$ coincides with the composition $\sigma_i^*E\xrightarrow{\beta_i}\sigma_i^*E'\xrightarrow{\tau'_i} E'$. So we have a commutative diagram
+\[
+ \xymatrix{
+  \sigma_i^*E\ar[r]^{\beta_i} \ar[d]^{\tau_i} & \sigma_i^*E' \ar[d]^{\tau'_i}\ar[r]^{\sigma_i^*(p')} & U_i\ar[d]^{\sigma_i}\\
+ E\ar[r]_{\beta} & E'\ar[r]_{p'} & S.
+ }
+\]
+For this map to make $(\id, \beta)$ into a morphism of elliptic curves, we need to check $p'\circ \beta=p$ and $\beta\circ e= e'$. It is enough to check this fpqc-locally. 
+\begin{align*}
+ p'\beta\tau_i &=&& p'\tau'_i\beta_i &\mbox{(definition of }\beta\mbox{)}\\
+&=&& \sigma_i\circ \sigma_i^*(p')\circ \beta_i &\mbox{(pullback diagram defining }\sigma_i^*E'\mbox{)}\\
+&=&& \sigma_i\circ \sigma_i^*(p)&\mbox{(definition of }\beta_i\mbox{)}\\
+&=&& p\circ \tau_i&\mbox{(pullback diagram defining }\sigma_i^*E\mbox{)}.
+\end{align*}
+Similarly, one can check that $\sigma_i^*(\beta)=\beta_i$ using the universal property of pullbacks.
+
+Similarly, we have 
+\begin{align*}
+ \beta e\sigma_i &=&& \beta \circ \tau_i (\id, e\circ \sigma_i) &\mbox{(definition of }(\id, e\circ \sigma_i)\mbox{)}\\
+&=&& \tau_i'\circ \beta_i \circ  (\id, e\circ \sigma_i) &\mbox{(definition of }\beta\mbox{)}\\
+&=&& \tau_i' \circ (\id, e'\circ \sigma_i)&\mbox{(definition of }\beta_i\mbox{)}\\
+&=&& e'\circ \sigma_i &\mbox{(definition of }(\id, e'\circ \sigma_i)\mbox{)}.
+\end{align*}
+Altogether, this proves the fullness and thus we have shown that $\MM_{ell}$ is a prestack in the fpqc topology.
+\end{pf}
+ We will use Lemma 4.25 of \cite{VistoliDescent}, stating that to prove \Cref{Mellfpqcstack} it is enough to check the following two points:
+\begin{enumerate}
+ \item $\MM_{ell}$ is a stack in the Zariski topology. 
+ \item For any flat surjective morphism of affine schemes $V\to U$, the functor $\MM_{ell}(U)\to \MM_{ell}(V\to U)$ is an equivalence of categories.
+\end{enumerate}
+We have already shown that $\M_{ell}$ is an fpqc prestack, so in particular a Zariski prestack. Next, we want to show the ``gluing'' property for elliptic curves for Zariski coverings. 
+
+\begin{Lemma}\label{MellZariskistack}
+ $\MM_{ell}$ is a stack in the Zariski topology.
+\end{Lemma}
+
+\begin{pf}
+ Let $S$ be any scheme and let $\{U_i\xrightarrow{\sigma_i} S\}_{\{i\in I\}}$ be a Zariski covering of $S$. In order to show that the functor given by chosen pullbacks
+\[
+ \MM_{ell}(S)\to \MM_{ell}(\{U_i\to S\})
+\]
+is an equivalence of categories, by \Cref{Mellfpqcprestack} we only need to check that it is essentially surjective. 
+
+We will use that morphisms of schemes form a stack in Zariski topology, which we will denote by $\Mor$. The stack property is explained in \cite{VistoliDescent}, Section 4.3. Note that this category is fibered just in categories and not in groupoids. 
+
+Thus, assume that we are given an object with descent data: A family of $(E_i, p_i,e_i)\in \MM_{ell}(U_i)$ together with isomorphisms of elliptic curves $\varphi_{ij}\colon \pr_2^*E_j\to \pr_1^*E_i$ satisfying the cocycle condition (taking into account the composition isomorphisms $\alpha_{?,?}$).  We need to construct an elliptic curve $E$ over $S$ with $\sigma_i^*E\cong E_i$ (as elliptic curves, compatible with transition maps). Since $\Mor$ is a Zariski stack, we know that we obtain a map $p\colon E\to S$ so that $\sigma_i^*(E)$ is isomorphic to $E_i$ for all $i\in I$, and these isomorphisms are compatible with $\varphi_{ij}$ and with $p_i$ and $\sigma_i^*(p)$, 
+%\todo{too vague??} 
+respectively. It is proper and smooth since these properties can be checked Zariski locally. 
+
+For the section, consider the compositions $U_i\xrightarrow{e_i} E_i \cong \sigma_i^*E\to E$. These coincide on intersections, 
+% \todo{check???} 
+so define a map $e\colon S \to E$ so 
+that $e\sigma_i=e_i$. We need to check $pe=\id_S$. Again, we can do this Zariski locally, and there it is implied by the commutativity of the following diagram:
+\[
+ \xymatrix{
+  U_i \ar[r]^{e_i} \ar@{=}[rrd]& E_i \ar[r]^{\cong}\ar[rd]^{p_i} &\sigma_i^*E \ar[d]^{\sigma_i^*(p)}\ar[r]^{\tau_i} &E\ar[d]^{p}\\
+&&U_i\ar[r]_{\sigma_i} &S.
+ }
+\]
+Next, we need to check that the pullbacks of $(E,e)$ to geometric fibers are elliptic curves again. Note that since $\{U_i\to S\}$ is a Zariski covering, any map $\Spec(\overline{k}) \to S$ factors through some $U_i$, so that the pullback of $E$ to $\Spec(\overline{k})$ is isomorphic to the pullback of $E_i$ to $\Spec(\overline{k})$, and also the induced sections coming from $e$ and $e_i$ coincide. Thus, the geometric fibers of $p$ are elliptic curves since so are the geometric fibers of $p_i$ by assumption. 
+
+This completes the proof. 
+\end{pf}
+
+The main difficulty now is the fact that ``gluing'' of schemes given on an fpqc (in fact, even on an \'{e}tale) covering does not yield a scheme again. In the \'{e}tale case, we could in general obtain an algebraic space in this way. So we need some care to see that in the case of elliptic curves (which goes back to the case of polarized schemes), the gluing does work out. Note that this would not work for genus $1$ curves without section, cf.\ \cite{VistoliDescent}, Example 4.39. 
+%no proper citation in there!
+
+The ideal sheaf $\J$ which we discussed in \Cref{LemO3E} will make every elliptic curve into a polarized scheme. We will use this fact in combination with the following theorem, which is a slightly stronger statement than Proposition 4.4.12 of \cite{OlssonStacks} and of \cite[Tag 0D40]{stacks-project}, and actually proven in the proof of Theorem 4.38  of \cite{VistoliDescent}. 
+
+\begin{Prop}[cf.\ \cite{OlssonStacks}, Proposition 4.4.12 and Theorem 4.38 of \cite{VistoliDescent}]\label{Polfpqc}
+ Let $\Pol$ be the category whose objects are pairs $(f\colon X\to Y, \mathcal{L})$, where $f$ is proper flat morphism of finite presentation and $\mathcal{L}$ a relatively ample line bundle on $X$. A morphism 
+\[
+ (a,b,\varepsilon) \colon (f\colon X\to Y, \mathcal{L}) \to (f'\colon X' \to Y', \mathcal{L}')
+\]
+consists of morphisms of schemes $a\colon X\to X'$ and $b\colon Y\to Y'$ making the diagram
+\[
+     \xymatrix{
+ X \ar[d]^{f} \ar[r]^{a} & X' \ar[d]^{f'}\\
+  Y \ar[r]^{b} & Y'
+  }
+\]
+cartesian, and $\varepsilon\colon a^*\mathcal{L} \to \mathcal{L}'$ isomorphism of sheaves on $X'$. Composition is defined componentwise (using composition isomorphisms for pullbacks). 
+
+Then $\Pol$ is fibered over $\Sch/\Spec\Z$ via $(f\colon X\to Y, \mathcal{L})\mapsto Y$, and it is a stack in the fpqc topology. 
+\end{Prop}
+
+\begin{pf}
+ This is exactly done on pp.\ 99-103 of \cite{VistoliDescent}. The main point where the assumptions on objects of $\Pol$ are used is for applying Proposition 4.37 of \cite{VistoliDescent}, which is a version of cohomology and base change without noetherianity assumptions. 
+\end{pf}
+
+%\todo{add Pol1 as an intermediate step?}
+
+
+
+\begin{proof}[Proof of \Cref{Mellfpqcstack}]
+Using Lemma 4.25 of \cite{VistoliDescent}, we are left to show that for a flat surjective morphism of affine schemes $\varphi\colon V=\Spec(B)\to U=\Spec(A)$ (so in particular an fpqc covering), the functor $\MM_{ell}(U)\to \MM_{ell}(V\to U)$ is an equivalence of categories. By \Cref{Mellfpqcprestack} again, we only need to check that it is essentially surjective. This is very similar to Theorem 4.38 in \cite{VistoliDescent} and to Theorems 4.4.13 and 4.4.10 in \cite{OlssonStacks}. 
+
+Let an elliptic curve $p\colon E\to V$ with section $e\colon V\to E$ be given, together with descent data, i.e. an isomorphism $\beta\colon \pr_2^*E\to \pr_1^*E$ of elliptic curves over $V\times_U V$ satisfying the appropriate cocycle condition. Observe that \Cref{LemO3E} implies that we have a morphism of fibered categories over $\Sch/\Spec\Z$ from $\MM_{ell}$ to $\Pol$ given by $(S',(E', p', e')) \mapsto (p'\colon E'\to S', \mathcal{J}'^{-1})$ where $\mathcal{J}'$ is the ideal sheaf corresponding to $e'$ (see \Cref{LemO3E} for details). This implies in particular that we have a $2$-commutative diagram of categories
+\[
+ \xymatrix{
+  \MM_{ell}(U) \ar[r]\ar[d] & \Pol(U)\ar[d]\\
+  \MM_{ell}(V\to U) \ar[r] & \Pol(V\to U).
+ }
+\]
+Since in \Cref{Polfpqc}, we discussed $\Pol$ to be an fpqc stack, we conclude there is a scheme $X$ and a flat proper morphism of finite presentation $q\colon X\to U$ and an isomorphism $\sigma\colon \varphi^*X \to E$ of schemes over $V$, satisfying certain compatibilities. (Actually, we also get a relatively ample invertible sheaf $\mathcal{L}$ on $X$ and an isomorphism $\sigma^*\pi^*\mathcal{L} \cong \mathcal{J}^{-1}$ of $\OO_E$-modules, where $\pi$ denotes the projection $\varphi^*X\to X$, but we will not use this.) In particular, this means that $\sigma$ is an isomorphism of descent data, and more explicitly, we have a commutative diagram
+\begin{equation}\label{CompDescentData}
+ \xymatrix{
+  \pr_2^*\varphi^*X \ar[r]^{\pr_2^*\sigma} \ar[d]_{\alpha_{?,?}} & \pr_2^*E\ar[dd]^{\beta}\\
+(\varphi\circ \pr_2)^*X\ar[d]_{\alpha_{?,?}^{-1}} &\\
+\pr_1^*\varphi^*X\ar[r]^{\pr_1^*\sigma} &\pr_1^*E.
+ }
+\end{equation}
+
+The last piece of data we need to construct is a section for $q$. To do so, we will use that $X$ is a sheaf in the fpqc topology (as shown in \cite{VistoliDescent}, Theorem 2.55). Observe that we have a map $V\to X$, defined as 
+\[
+ V\xrightarrow{e} E \xrightarrow{\sigma^{-1}} \varphi^*X \xrightarrow{\pi} X.
+\]
+We have to show that precomposing this map with either projection $\pr_i\colon V\times_U V\to V$ yields the same result. Since $\beta$ is an isomorphism of elliptic curves, it satifies $\beta\circ \pr_2^*(e)=\pr_1^*(e)$.
+Thus we have
+\begin{align*}
+\pi\circ \sigma^{-1}\circ e\circ \pr_1 &=&& \pi\circ \sigma^{-1}\circ \pr_1\circ \pr_1^*(e) &\mbox{(as in \eqref{SectionPullback})}\\
+&=&& \pi\circ \sigma^{-1}\circ \pr_1\circ \beta \circ \pr_2^*(e) &\mbox{(definition of }\beta\mbox{)}\\
+&=&& \pi\circ \pr_1\circ \pr_1^*(\sigma)^{-1}\circ \beta \circ \pr_2^*(e)&\mbox{(definition of }\pr_1^*(\sigma)\mbox{)}\\
+&=&& \pi\circ \pr_1\circ\alpha_{?,?}^{-1}\circ \alpha_{?,?}\circ \pr_2^*(\sigma)^{-1}\circ \pr_2^*(e)&\mbox{(commutativity of }\eqref{CompDescentData}\mbox{)}\\
+&=&& \pi\circ \pr_2\circ \pr_2^*(\sigma)^{-1}\circ \pr_2^*(e)&\mbox{(definition of } \alpha_{?,?}\mbox{)}\\
+&=&& \pi\circ \sigma^{-1}\circ \pr_2\circ \pr_2^*(e)&\mbox{(definition of }\pr_2^*(\sigma)\mbox{)}\\
+&=&& \pi\circ \sigma^{-1}\circ e\circ \pr_2 &\mbox{(as in \eqref{SectionPullback})}.
+\end{align*}
+Thus, we obtain a map $j\colon U\to X$ so that $j\circ \varphi=\pi\circ \sigma^{-1}\circ e$. We still need to show that $qj=\id_U$. Since $U$ is a sheaf in fpqc topology, we only need to check $qj\varphi=\varphi$, which is straightforward. 
+
+Next, we conclude by \cite{EGAIV}, Corollaire 17.7.3, that $q\colon X\to U$ is actually smooth since its pullback along the faithfully flat and quasi-compact map $\varphi$ is smooth. 
+
+We are left to show that for any algebraically closed field $k$ and any morphism $\Spec(k)\to U$, the pullback $(X_k, j_k)$ of $(X,j)$ is an elliptic curve over $k$. Recall that $U=\Spec(A),V=\Spec(B)$ were assumed to be affine. Then we know that $\Spec(k)\times_U V\cong \Spec(B\otimes_A k)$. Note that $B\otimes_A k$ is not the $0$-ring since the map $A\to B$ was assumed to be faithfully flat, thus it has some maximal ideal $\mathfrak{m}$. Let $L$ be the algebraic closure of the quotient field $B\otimes_A k/\mathfrak{m}$; then we have the commutative diagram
+\[
+  \xymatrix{
+  \Spec(L) \ar[r]\ar[d] & V\ar[d]\\
+  \Spec(k) \ar[r] & U.
+ }
+\]
+Let $E_L$ be the pullback of $E$ along $\Spec(L)\to V$. Note that then the diagram
+\[
+ \xymatrix{
+    E_L\ar[r]_-{p_L}\ar[d]^{g} &  \Spec(L)\ar[d]^{\widetilde{g}}\\
+  X_k\ar[r]^-{q_k}& \Spec(k)
+ } 
+\]
+is cartesian, which can be (roughly) seen as follows:
+\[
+ \begin{aligned}
+  E_L &=&& E\times_{V} \Spec(L) \cong (X\times_U V)\times_V \Spec(L)\\
+&\cong && X\times_U \Spec(L) \cong (X\times_U \Spec(k))\times_{\Spec(k)} \Spec(L)\\
+&= && X_k\times_{\Spec(k)} \Spec(L).
+ \end{aligned}
+\]
+It is easy to check that also the pullback of the section $j_k\colon \Spec(k)\to X_k$ is the section $e_L$, and recall we assumed that $(E_L, e_L)$ is an elliptic curve over $L$. Thus, by \Cref{DescentAlgClosedField}, we conclude that $(X_k, j_k)$ is an elliptic curve over $k$.
+
+All in all, this finishes the proof that the tuple $(X,q,j)$ constructed above is an elliptic curve over $U$ whose pullback is up to isomorphism given by the descent data we started with. This shows that $\MM_{ell}$ is indeed a stack in fpqc topology. 
+\end{proof}
+
+
+\section{Weierstraﬂ equations}
+We have established in the previous section the stack property of the moduli stack of elliptic curves. Our next objective is to show that it is an algebraic stack. (In fact, it is even a Deligne-Mumford stack, but proving this requires more effort and will be done at a later point.) Recall that we need to show that the diagonal of $\MM_{ell}$ is representable and that it possesses a smooth atlas. The key ingredient will be the fact that any elliptic curve is Zariski locally given by a Weierstraﬂ equation. These statements are well-known and can be found in e.g. \cite{KatzMazur} and \cite{OlssonStacks}. 
+
+% Our first objective is to reduce the existence of the atlas to the existence of the local Weierstraﬂ equations. We consider the ring $A=\Z[a_1,a_2,a_3,a_4,a_6][\Delta^{-1}]$ and the elliptic curve given by the Weierstraﬂ equation over it. Our first (easy) goal is to show that it is an elliptic curve in the above sense. Given this, we obtain a morphism $\Spec(A)\to \MM_{ell}$ which will be shown to be representable and smooth. 
+
+\begin{Lemma} \label{FiberwiseSmoothness}
+ Let $R$ be an arbitrary ring, and let $f_1, \ldots, f_n$ be homogeneous polynomials in $R[T_1,\ldots, T_k]$ with $n\leq k-1$. Then 
+\[ 
+ X=\Proj(R[T_1, \ldots, T_k]/(f_1, \ldots, f_n))
+\]
+is smooth over $\Spec(R)$ of relative dimension $k-1-n$ if and only if for any ring homomorphism into a field $\alpha\colon R\to K$, the scheme
+\[
+ X_K=\Proj(K[T_1,\ldots, T_k]/(\alpha(f_1), \ldots, \alpha(f_n))
+\]
+is smooth over $K$ of relative dimension $k-1-n$.
+\end{Lemma}
+
+\begin{proof}
+ If $X\to \Spec(R)$ is smooth of relative dimension $k-1-n$, so is any pullback $X\times_{\Spec(R)} \Spec(K)\to \Spec(K)$. (Here, we are using \cite[Tag 01N2]{stacks-project}.) 
+
+For the converse, it is enough to show that $X\to \Spec(R)$ is smooth of relative dimension $k-1-n$ when restricted to each of the $D_{+}(T_i)$. Thus, we need to check whether the map
+\[
+ R \to R[T_1,\ldots, \widehat{T_i}, \ldots, T_k]/(f_1(T_i=1), \ldots, f_n(T_i=1)) 
+\]
+is smooth of relative dimension $k-1-n$.  We already know that the restriction to $D_{+}(T_i)\subset X_K$ is smooth of the same relative dimension for any $\alpha\colon R\to K$, so that 
+\[
+ K \to K[T_1,\ldots, \widehat{T_i}, \ldots, T_k]/(\alpha(f_1(T_i=1)), \ldots, \alpha(f_n(T_i=1))) 
+\]
+is smooth of same relative dimension and thus also standard smooth \cite[Tag 00TA]{stacks-project}. This means that the matrix
+\[
+ \left(\frac{\partial\alpha(f_r(T_i=1))}{\partial T_s}\right)_{1\leq r\leq n, 1\leq s\leq k, s\neq i}
+\]
+has rank $n$. By Definition 6.18 of \cite{GoertzWedhorn}, this is enough to see smoothness.
+\end{proof}
+
+\begin{remark}
+ Note that a priori, Definition 6.18 of \cite{GoertzWedhorn} and \cite[Tag 01V5]{stacks-project} do not coincide. They can be shown to be equivalent.
+\end{remark}
+
+
+
+
+\begin{Lemma}\label{WeierstrassisElliptic}
+ Let $R$ be any ring. Then the closed subscheme of $\mathbb{P}^2_R$ cut out by the Weierstraﬂ equation 
+ \[
+ y^2z+a_1xyz+a_3yz^2=x^3+a_2x^2z+a_4xz^2+a_6z^3
+ \]
+is an elliptic curve over $R$ if $\Delta=-b_2^2b_8-8b_4^3-27b_6^2+9b_2b_4b_6$ is invertible in $R$, where
+\begin{equation*}
+\begin{split}
+ b_2 &= a_1^2+4a_2,\\
+ b_4 &= 2a_4+a_1a_3,\\
+ b_6 &= a_3^2+4a_6,\\
+ b_8 &= a_1^2a_6+4a_2a_6-a_1a_3a_4+a_2a_3^2-a_4^2.
+\end{split}
+\end{equation*}
+
+Moreover, if this equation cuts out a smooth scheme over $\Spec(R)$, then $\Delta$ is invertible in $R$.
+\end{Lemma}
+
+\begin{proof}
+ Fist, recall that we mean
+\[ 
+ E=\Proj(R[x,y,z]/( y^2z+a_1xyz+a_3yz^2=x^3+a_2x^2z+a_4xz^2+a_6z^3))
+\]
+ by ``cut out by this equation''. This comes with a natural map $E\to \Spec(R)$ as in \cite[Tag 01ME]{stacks-project}. A section to $D_+(y)$ is given by 
+\begin{equation}
+\begin{split}
+  &R[x,z]/( z+a_1xz+a_3z^2=x^3+a_2x^2z+a_4xz^2+a_6z^3) \to R\\
+ &x \mapsto 0,\\
+ &z \mapsto 0.
+\end{split}
+\end{equation}
+
+
+By \cite[Tag 01NH]{stacks-project}, the map $\mathbb{P}^2_R\to \Spec(R)$ is proper (being of finite type is obvious here), and so is the closed immersion $E\to \mathbb{P}^2_R$ (\cite[Tag 01N0]{stacks-project} and \cite[Tag 01W5]{stacks-project}), thus the map $E\to \Spec(R)$ is proper. 
+
+For equivalence of smoothness and invertibility of $\Delta$, we use the \Cref{FiberwiseSmoothness}. Note that using faithfully flat descent, it is enough to consider algebraically closed fields. This is then shown in Proposition III.1.4(a) of \cite{SilvermanAEC}. Moreover, Proposition III.3.1 of \cite{SilvermanAEC} shows that the geometric fibers are elliptic curves. This implies the claim. 
+\end{proof}
+
+To be able to produce certain embedding into projective spaces later on, we will prove the following lemma.
+\begin{Lemma} \label{ImmersionGeomPoints}
+ Let $f\colon X\to Y$ be a morphism of proper $S$-schemes such that for every geometric point $\Spec(k) \to S$, the pullback $f_k\colon X_k\to Y_k$ is a closed immersion. Then $f$ is a closed immersion.
+\end{Lemma}
+\begin{proof}
+ First, by \cite[Tag 01W6]{stacks-project} we conclude that $f$ itself is proper. Now we want to apply \cite{EGAIV}, Corollaire 18.12.6, so we only need to show that for every $y\in Y$ with residue field $\kappa(y)$, the pullback map 
+\[
+ X_{\kappa(y)}:=X\times_Y \Spec\kappa(y) \to \kappa(y)
+\]
+is radicial (or equivalently, universally injective \cite[Tag 01S4]{stacks-project}) and geometrically reduced. Let $s=f(y)$. The map $Y\to S$ induces a map of residue fields $\kappa(s)\to \kappa(y)$ and a commutative diagram
+\[
+  \xymatrix{
+  \Spec\kappa(y) \ar[r]\ar[d] & Y\ar[d]\\
+  \Spec\kappa(s)  \ar[r] & S,
+ }
+\]
+ so that we also obtain a map $\Spec \kappa(y)\to Y_{\kappa(s)}:=Y\times_S \Spec\kappa(s)$ compatible with the above morphisms. In particular, the map $\Spec\kappa(y)\to Y$ factors through $Y_{\kappa(s)}\to Y$, and a standard pullback manipulation yields shows that all the squares below are pullback squares: 
+\[
+  \xymatrix{
+  X_{\kappa(y)} \ar[r]\ar[d] & X_{\kappa(s)} \ar[d]\ar[r]&X\ar[d]\\
+  \Spec\kappa(y)  \ar[r] & Y_{\kappa(s)} \ar[r] &Y.
+ }
+\]
+Moreover, observe that $\kappa(y)$ is indeed the residue field $\kappa(y')$ of its image point $y'$ in $Y_{\kappa(s)}$ since the morphism $Y_{\kappa(s)} \to Y$ by construction has the property $\kappa(y)\subset \kappa(y')$. So using \cite{EGAIV}, Corollaire 18.12.6 once again, we conclude that it is enough to show that $X_{\kappa(s)}\to Y_{\kappa(s)}$ is a closed immersion. We already know by assumption that $X_{\overline{\kappa(s)}} \to Y_{\overline{\kappa(s)}}$ is a closed immersion, with $\overline{\kappa(s)}$ the algebraic closure of $\kappa(s)$. Since $\Spec\overline{\kappa(s)}\to \Spec \kappa(s)$ is fpqc, so is $Y_{\overline{\kappa(s)}}\to Y_{\kappa(s)}$, and thus by fpqc descent (e.g. \cite{VistoliDescent}, Proposition 1.15(xii)), the map $X_{\kappa(s)}\to Y_{\kappa(s)}$ is a closed immersion. This completes the proof. 
+\end{proof}
+
+
+
+Our next objective is to provide local Weierstraﬂ equations for all elliptic curves. We will follow \cite{OlssonStacks}, Section 13.1.6, but the statement can be found in many other sources. 
+\begin{Theorem}[\cite{OlssonStacks}, Section 13.1.6]
+ Zariski locally, any elliptic curve is given by a Weierstraﬂ form as in \Cref{WeierstrassisElliptic}. 
+\end{Theorem}
+
+\begin{proof}
+ By \Cref{ReductionNoetherian}, it is enough to show that any elliptic curve $(E, p\colon E\to \Spec(R), e)$ for a noetherian ring $R$ is Zariski locally cut out by Weierstraﬂ equations. Recall that we have shown in \Cref{IdealCartier} and \Cref{LemO3E} that the ideal sheaf $\mathcal{I}$ of the closed immersion $e\colon \Spec(R) \to E$ is an invertible line bundle, and also that the formation of $\mathcal{L}:=\mathcal{I}^{-1}$ is compatible with base change. By definition, we had an exact sequence
+\[
+ 0\rightarrow \mathcal{I} \to \OO_E \to e_*\OO_{\Spec(R)} \to 0,
+\]
+which yields for any $n\geq 0$ the short exact sequence 
+\[
+ 0\rightarrow \mathcal{L}^{\otimes n} \to \mathcal{L}^{\otimes (n+1)} \to e_*\OO_{\Spec(R)}\otimes \mathcal{L}^{\otimes (n+1)} \to 0.
+\]
+
+Next, we want to show that $p_*\left(\mathcal{L}^{\otimes n}\right)$ is a locally free module of rank $n$ for $n\geq 1$. We will use again the variant of cohomology and base change of \cite{VistoliDescent}, Proposition 4.37. To apply it, we need to compute $H^1(E_k, \mathcal{L}_k^{\otimes n})$, and it is enough to do so for algebraically closed $k$. Using Serre duality (cf. \cite{Hartshorne}, Section III.7) and the fact that the dualizing sheaf of an elliptic curve over an algebraically closed field is trivial (e.g.\cite{Hartshorne}, Example IV.1.3.6), we conclude 
+\[
+ H^1(E_k, \mathcal{L}_k^{\otimes n})\cong H^0(E_k, \mathcal{L}_k^{\otimes (-n)}).
+\]
+As in the proof of \Cref{LemO3E}, we can identify $\mathcal{L}_k\cong \OO_{E_k}(e_{\Spec(k)})$. Using \cite{Hartshorne}, Lemma IV.1.2, we conclude that negative powers of $\mathcal{L}_k$ do not have non-trivial global sections. So we may indeed apply \cite{VistoliDescent}, Proposition 4.37 to conclude that $p_*\left(\mathcal{L}^{\otimes n}\right)$ is a locally free module and its formation commutes with base change. To determine the rank, we use again the pullback to an algebraically closed field $k$. Riemann-Roch theorem (\cite{Hartshorne}, Theorem IV.1.3) immediately implies that there the rank is $n$, thus so is the rank of $p_*\left(\mathcal{L}^{\otimes n}\right)$.
+
+Next, we want to show that the quotient of the pushforward map $p_*(\mathcal{L}^{\otimes n}) \to p_*(\mathcal{L}^{\otimes (n+1)})$ is a locally free module of rank $1$. We can choose an affine covering of $\Spec(R)$ trivializing both of these locally free sheaves. For any $\Spec(A)$ in this covering, the quotient corresponds (via global sections) to an $A$-module $M$ in the exact sequence of the form
+\[
+ 0\to A^n \to A^{n+1}\to M\to 0.
+\]
+Given any $A$-algebra $A'$, we pull back to $\Spec(A')$ and obtain an elliptic curve $(E', p', e')$. We know by \Cref{LemO3E} that the inverse $\mathcal{L}'$ of the ideal sheaf of $e'$ is precisely the pullback of $\mathcal{L}$ (and same for all its powers). Since the formation of $p_*\left(\mathcal{L}^{\otimes n}\right)$ commutes with base change, we conclude that the resulting map $A^n\otimes_A A' \to A^{n+1}\otimes A'$ is injective, so that $\Tor^1_A(M, A')=0$. This is in particular true for all square $0$ extensions $A'=A\oplus N$ for any module $N$, so $\Tor^1_A(M,N)=0$ for any $A$-module $N$. Thus, $M$ is $A$-flat and finitely generated over $A$. Since $R$ and thus $A$ are noetherian, we can conclude \cite[Tag 00NX]{stacks-project} that $M$ is locally free, and then it is necessarily of rank $1$. 
+
+By possibly restricting further, we may assume $p_*\left(\mathcal{L}^{\otimes n}\right)$ for $n\in \{1,2,3,6\}$ and also the quotients $p_*\left(\mathcal{L}^{\otimes 2}\right)/p_*\left(\mathcal{L}^{\otimes 1}\right)$, $p_*\left(\mathcal{L}^{\otimes 3}\right)/p_*\left(\mathcal{L}^{\otimes 2}\right)$ to be trivial over $\Spec(A)$. Moreover, we will use the product structure on $\bigoplus_{n\geq 0} \mathcal{L}^{\otimes n}$ and the fact that the maps $\mathcal{L}^{\otimes n} \to \mathcal{L}^{\otimes (n+1)}$ exhibited above are compatible with multiplication. Fixing identifications, we may choose the basis $1$ for 
+\[
+ A\cong \Gamma(\Spec(A), p_*\mathcal{L}) \cong \Gamma(E\times_{\Spec(R)}\Spec(A), \mathcal{L})
+\]
+ (coming from $\OO_E\to \mathcal{L}$). Using freeness of the quotients, we can also choose bases $1,x$ and $1,x,y$ for the cases $n=2$ and $n=3$, respectively. This defines the elements 
+\[
+ 1,x,x^2, x^3, y, xy, y^2 \in \Gamma\left(\Spec(A),p_*\left(\mathcal{L}^{\otimes 6}\right)\right) \cong A^6. 
+\]
+
+Note also that the situation is stable under base change. We will first argue that base change to any algebraically closed field $k$ (and thus to any field, using faithful flatness) of the resulting map $A^7\xrightarrow{f} A^6$ is surjective. By \cite{Hartshorne}, proof of Proposition IV.4.6 (note that the characteristic assumption is not used at this point) and \cite{SilvermanAEC}, proof of the Proposition III.3.1, we conclude that over $k$, any relation between the elements above has to be of the form
+\begin{equation}\label{Weierstrass}
+ \alpha_1+\alpha_2x+\alpha_3y+\alpha_4x^2+\alpha_5xy+\alpha_6y^2+\alpha_7x^3=0
+\end{equation}
+ with $\alpha_6\alpha_7\neq 0$, since otherwise every term would have a pole of different order at the point at $\infty$. (Note we are using the identification $\mathcal{L}_k\cong \OO_{E_k}(e_{\Spec(k)})$ once again.) Over $k$, we know that the dimension of the kernel is at least one, but the above argument shows also it is precisely $1$, since having two such relations would also imply one with $\alpha_6\alpha_7=0$, and this relation is necessarily $0$ then. Thus, over $k$ this map is surjective. Using the fact that it is enough to check surjectivity for all localizations at prime ideals and Nakayama's lemma, we conclude that the map $A^7\to A^6$ is surjective. 
+
+Next, we want to conclude that a Weierstraﬂ relation holds over $A$. We have a short exact sequence
+\[
+ 0\to \Ker(f)\to A^7 \xrightarrow{f} A^6\to 0,
+\]
+which remains exact after tensoring with any $A$-algebra since the last term is free. Since we now that the kernel is non-trivial over algebraically closed fields, we conclude that it is non-trivial and we have a relation of the form \eqref{Weierstrass}. Moreover, since $\alpha_6$ and $\alpha_7$ are units after base change to every field, they are units in $A$. We may immediately divide by $\alpha_7$ and so assume that $\alpha_7=1$. 
+
+We want to embed $E_A:=E\times_{\Spec(R)}\Spec(A) \to \mathbb{P}^2_A$ using the map given by the sections $x,y,1$. This map is a closed immersion if we base-change from $A$ to any algebraically closed field \cite{Hartshorne}, Example IV.3.3.3, or \cite{SilvermanAEC}, Proposition III.3.1. We use \Cref{ImmersionGeomPoints} to conclude that thus the corresponding map $E\times_{\Spec(R)}\Spec(A) \to \mathbb{P}^2_A$ is also a closed immersion.   
+
+Consider the homogeneous variant of \eqref{Weierstrass}, namely the polynomial
+\[
+F=\alpha_1Z^3+\alpha_2XZ^2+\alpha_3YZ^2+\alpha_4X^2Z+\alpha_5XYZ+\alpha_6Y^2Z+X^3 \in A[X,Y,Z]. 
+\]
+ Using the automorphism $Z\mapsto \alpha_6^{-1}Z$ of $\mathbb{P}^2_A$, we may assume $\alpha_6=1$. Unpacking the construction of the proof of Theorem II.7.1 in \cite{Hartshorne} on the affine parts and keeping track of trivializations of $\mathcal{L}^{\otimes k}$, one can check that the map defined in the sense of the aforementioned theorem by the sections $x,y,1$ in $\Gamma(E_A, \mathcal{L}^{\otimes 3})= \Gamma(\Spec A, p_*\mathcal{L}^{\otimes 3})$ factors through the closed subscheme 
+\[
+ V_+(F):=\Proj\left(A[X,Y,Z]/(F)\right)
+\]
+ of $\mathbb{P}^2_A$ (cf. \cite[Tag 01QP]{stacks-project}), and the map to this subscheme is a closed immersion $j$ again. Our goal is to show that the resulting map $E_A\to V_+(F)$ is an isomorphism of schemes over $\Spec A$. 
+
+To do so, we need to show that the corresponding ideal sheaf $\mathcal{J}$ vanishes; recall that it is defined as the kernel 
+\[
+ 0\to \mathcal{J} \to \OO_{V_+(F)} \to j_*\OO_{E_A} \to 0.
+\]
+ Once again we exploit that, if we base-change the whole situation to an algebraically closed field $k$, the pullback $\mathcal{J}_k$ of $\mathcal{J}$ to $V_+(F_k)$ vanishes. Indeed, if we pull back the exact sequence along a morphism $\mathbb{P}^2_k\to \mathbb{P}^2_A$ induced by a morphism $\Spec k\to \Spec A$, the sequence remains exact since $j_*\OO_{E_A}$ is flat over $\Spec A$. (We then check the exactness in an affine cover.) Moreover, we can use cohomology and base change for affine maps (\cite[Tag 02KG]{stacks-project}) to conclude that the pulled back exact sequence is of the form
+\[
+ 0\to \mathcal{J}_k \to \OO_{V_+(F_k)} \to (j_k)_*\OO_{E_k} \to 0.
+\]
+Since $j_k$ is by construction the closed immersion defined by the sections $x,y,1$ of $\mathcal{L}_k^{\otimes 3}$ now over $k$, it is an isomorphism as shown in \cite{SilvermanAEC}, Proposition 3.1(a). So if we restrict the original exact sequence to standard opens on $\mathbb{P}^2_A$, we in each case get a corresponding sequence of $A$-modules 
+\[
+ 0\to J\to S\to N\to 0,
+\]
+where we in addition know that $S$ is a finitely generated $A$-algebra, thus in particular a noetherian ring. Moreover, after tensoring with $k$ for any ring homomorphism $A\to k$ to an algebraically closed field $k$, we have deduced $J\otimes_A k=0$. Then also $J\otimes_A k=0$ holds for any ring homomorphism $A\to k$ into any field $k$. Now given a ring homomorphism $S\to K$ to some field $K$, we obtain by composition with the structure morphism $A\to S$ a map $A \to K$, and in particular, the tensor product $ J\otimes_S K$ is a quotient of $J\otimes_A K$ and thus $0$ itself. This applies in particular to $K=S_{\mathfrak{p}}/\mathfrak{p}S_{\mathfrak{p}}$ for all prime ideals $\mathfrak{p}\subset S$. Since $S$ is noetherian, we know that $J$ is finitely generated as $S$-module so we can apply Nakayama's Lemma to conclude $J=0$. 
+
+So we have shown that we obtain an isomorphism over $\Spec A$ from $E_A$ to $V_+(F)$. In particular, by the second statement of \Cref{WeierstrassisElliptic}, we know that the discriminant $\Delta$ of the Weierstraﬂ equation \eqref{Weierstrass} (or its homogeneous version) is invertible in $A$.  To make the isomorphism into an isomorphism of elliptic curves, we need it to respect the sections. Recall that the section of $V_+(F)$ is given by ``$[0:1:0]$'', meaning a map from $\Spec(A)$ to $D_+(Y) \subset V_+(F)$ given via
+\begin{align*}
+ A[X,Z]/( F(Y=1)) &\to A\\
+ X &\mapsto 0,\\
+ Z &\mapsto 0.
+\end{align*}
+
+We want to show that for any point $\mathfrak{p}\in\Spec A$, the stalks of the sections $x$ and $1$ lie in $\mathfrak{m}_{e(\mathfrak{p})}\mathcal{L}^{\otimes 3}_{e(\mathfrak{p})}$. Since $x,y,1$ are a basis of global sections of $\mathcal{L}^{\otimes 3}$, we then may conclude that 
+\[
+ \im(e)\subseteq (E_A)_y:=\left\{P \in E_A\right|\left. y_P\notin \mathfrak{m}_{P}\mathcal{L}^{\otimes 3}_{P}\right\},
+\]
+Then we will show that on this affine subscheme, the isomorphism $E_A\to V_+(F)$ sends the section $e$ precisely to ``$[0:1:0]$'' (cf. Theorem II.7.1 and Proposition II.7.2 of \cite{Hartshorne}).
+
+For the behaviour the sections $x$ and $1$, consider once again the exact sequence
+\[
+ 0\rightarrow \mathcal{I}_A \to \OO_{E_A} \to e_*\OO_{\Spec(A)} \to 0.
+\]
+Recall that both $1,x$ are images of global sections of $\mathcal{L}^{\otimes 2}$ under the map 
+\[
+ \mathcal{L}^{\otimes 2} \cong \mathcal{I}\otimes \mathcal{L}^{\otimes 3}\to \OO_{E_A}\otimes\mathcal{L}^{\otimes 3}.
+\]
+For a point $\mathfrak{p}\in\Spec A$, we have $(e_*\OO_{\Spec(A)})_{e(\mathfrak{p})}\cong A_{\mathfrak{p}}\neq 0$, so that $\mathcal{I}_{e(\mathfrak{p})}\subseteq \mathfrak{m}_{e(\mathfrak{p})}$ and thus the section $e$ goes into $(E_A)_y$. 
+
+According to Proposition II.7.2, \cite{Hartshorne}, the open subscheme $(E_A)_y$ is affine, say $\Spec B$. Then the restriction $\mathcal{I}_A|_{\Spec B}$ corresponds to an ideal $I_B\subset B$ such that $B/I_B\cong A$, and the projection is inducing $e$. Since the restrictions of $x,1$ are in $\mathcal{I}\otimes \mathcal{L}^{\otimes 3}$, this implies that sections $\frac{x}{y}, \frac{1}{y}$ correspond to elements of $I_B\subset B$ and thus are mapped to $0$ in $A$, making the diagram of sections commute. This completes the proof. 
+\end{proof}
+ 
+
+\begin{remark}
+ The actual proof that local Weierstrass equations imply that $\MM_{ell}$ is algebraic will be added later. 
+\end{remark}
+
+ 
+
+
+
+
+\bibliographystyle{amsalpha}
+\bibliography{../../Garside}
+\end{document}
