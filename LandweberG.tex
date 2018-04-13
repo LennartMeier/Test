@@ -1,0 +1,99 @@
+\documentclass[11pt]{article}
+\input{Preamble.tex}
+
+
+
+\begin{document}
+\title{Orientations and Landweber exactness for groups with more than $2$ elements}
+\author{Michael A. Hill and Lennart Meier}
+\maketitle
+
+
+\section{Strongly even}
+Let throughout this section $G$ be a finite group and denote for every finite group $H$ by $\rho_H$ its regular representation. 
+\begin{prop}
+Let $X$ be a $G$-spectrum such that $\pi^H_{*\rho_H}X = 0$ for all subgroups $H\subset G$. Then $X \simeq 0$. 
+\end{prop}
+\begin{proof}
+We will prove this by induction on the size of the group, the case $|G| = 1$ being clear. Thus, assume that $X^H \simeq 0$ for every proper subgroup $H\subset G$ and $\pi^G_{*\rho_G} X = 0$. Consider the reduced regular representation $\rhob_G$. The representation sphere $S^{\rhob_G}$ has a finite cellular filtration $C_\bullet$ with $C_0 = S^0$ and cofiber sequences $G/H_+ \to C_i \to C_{i+1}$, where $H$ is a \emph{proper} subgroup (as $(\rhob_G)^G = 0$). As $X^H \simeq 0$ for proper subgroups, we see that $\pi^G_{\rhob_G}X \cong \pi^G_0X$ and thus $\pi_i^GX \cong \pi^G_{i\rho_G}X = 0$. 
+\end{proof}
+
+\begin{defi}
+We say that a $G$-spectrum $X$ is \emph{even} if $\pi^H_{*\rho_H-1}X = 0$ for every subgroup $H\subset G$. We say that it is \emph{strongly even} if additionally the restriction maps $\pi^H_{*\rho_H}X \to (\pi_{|H|*}^eX)^H$ are isomorphisms. 
+\end{defi}
+
+\begin{prop}
+A map between strongly even $G$-spectra is an equivalence iff it is an equivalence of underlying spectra. (Actually, we need only strongness for the target.)
+\end{prop}
+\begin{proof}
+Let $f\colon X \to Y$ be an underlying equivalence of strongly even $G$-spectra. Automatically, $f$ induces an isomorphism on all $\pi^H_{*\rho_H}$. Denote by $C$ the cofiber of $f$. Then $\pi^H_{*\rho_H}C = 0$ for all subgroups $H\subset G$ and thus $C\simeq 0$ by the previous proposition. 
+\end{proof}
+
+
+\section{Formal group laws}
+I am not quite sure whether I [L.] pick the right definitions here, but let's try. 
+
+Let $G$ be again a finite group and let $H$ be generically a subgroup of $G$. 
+\begin{defi}
+Let $\mC$ be a $G$-symmetric monoidal category. A \emph{cocommutative $G$-comonoid} is an object $M \in \mC(G/G)$ together with an extension in the diagram
+\[
+\xymatrix{
+\m{\Set}^{\Iso} \ar[d] \ar[r]^{-\square M} & \mC\\
+\m{\Set}^{op} \ar@{-->}[ur]
+}
+\]
+where the downward arrow use the inverse of an isomorphism.
+\end{defi}
+
+Note: If $\mC$ is a $G$-symmetric monoidal category, the coefficient system of categories of equivariant commutative monoids in the $\mC(G/H)$ has the structure of a $G$-symmetric monoidal category again, where the tensoring over $\m{\Set}^{\Iso}$ becomes one of indexed coproducts [whatever this exactly means].
+
+\begin{defi}
+Let $\mC$ be a $G$-symmetric monoidal category. A \emph{bicommutative $G$-Hopf algebra} is a cocommutative $G$-comonoid $M$ in commutative $G$-monoids such that the coefficient system $\mC(G/H)\left(i^*_HM, -\right)$ of abelian monoids takes actually values in abelian groups. 
+\end{defi}
+
+Let $\m{R}$ be a $G$-Tambara functor and let $\m{I}\subset \m{R}$ be an ideal. We have the usual notions of completeness and completions. 
+
+\begin{defi}
+Let $\m{R}$ be a $G$-Tambara functor. Let $T_{\m{R}}[x]$ be the free Tambara $\m{R}$-algebra on a class $x$ for the subgroup $H$ and $\hat{T}_{\m{R}}[x]$ its completion at the kernel of the augmentation map 
+$$T_{\m{R}}[x] \to \m{R},\qquad x\mapsto 0.$$ 
+Note that this implies that the map
+$$\hat{N}_H^G(\underline{\m{R}(G/H)\llbracket x \rrbracket}) \to \hat{T}_{\m{R}}[x](G/G)$$
+is an isomorphism, where $\hat{N}$ denotes a completed version of the norm (?). 
+
+An \emph{$H$-based $G$-Tambara formal group law} is a $G$-comonoid structure on in the category of complete Tambara $\m{R}$-algebras such that 
+the map 
+$$\hat{T}_{\m{R}}[x](G/G) \to \hat{T}_{\m{R}}[x](G/G) \hat{\Box} \hat{T}_{\m{R}}[x](G/G)$$
+is under the isomorphism above induced by a one-dimensional formal group law over $\m{R}(G/H)$. [Do I also need conditions on subgroups of $G$?]
+\end{defi}
+
+\section{Orientations}
+\begin{defi}
+A \emph{homotopy commutative $G$-ring spectrum} is a commutative $G$-monoid in the $G$-symmetric monoidal category $(G/H) \mapsto \Ho(\Sp^H)$. 
+\end{defi}
+
+\begin{defi}
+Let $C_2 \subset G$. A \emph{Real $G$-orientation} of a homotopy commutative $G$-ring spectrum $R$ is a morphism $MU^{((G))} = N_{C_2}^G MU_{\R} \to R$ of homotopy commutative $G$-ring spectra. 
+\end{defi}
+
+\begin{question}
+Is there a one-to-one correspondence between Real $G$-orientations of $R$ and Real orientations of the underlying $C_2$-spectrum of $R$?
+\end{question}
+
+\section{Landweber exactness}
+What does Real $G$-Landweber exactness mean (with $C_2\subset G$; maybe $G$ cyclic $2$-group)? Let's say we have a module $\m{R}_{\bigstar}$ (in some sense) over $\m{\pi}_\bigstar MU^{((G))}$ or something like this. A particular interesting case might be if $\m{\pi}_\bigstar MU^{((G))} \to \m{R}_{\bigstar}$ is a map of graded Tambara functors. 
+
+First possibility: We can consider the functor
+$$X \mapsto \MUG_{\bigstar}(X) \tensor_{\MUG_{*\rho_G}} R_{*\rho_{G}},$$
+where $\MUG_{\bigstar}$ denotes $G$-equivariant homology, and ask when this is a $G$-homology theory. 
+
+The second possibility seems to be special to $G = C_{2^n}$. We have a functor $C_{2^{n-1}}-\Set \to C_{2^n}-\Set$; we denote precomposition with this functor by $j$. We can consider the functor
+$$X \mapsto j\m{\MUG}_{\bigstar}(X)\Box_{j\m{\MUG}_{*\rho_G}} j\m{R}_{*\rho_G}.$$
+We can ask whether this is a $G$-homology theory. 
+
+
+
+
+
+
+
+\end{document}
